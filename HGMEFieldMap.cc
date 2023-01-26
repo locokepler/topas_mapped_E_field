@@ -31,7 +31,7 @@
 
 #include "TsParameterManager.hh"
 
-#include "TsMagneticFieldMap.hh"
+#include "HGMEFieldMap.hh"
 #include "TsVGeometryComponent.hh"
 
 #include "G4SystemOfUnits.hh"
@@ -44,14 +44,14 @@
 #include <map>
 
 // something something setting up the magnetic field
-TsMagneticFieldMap::TsMagneticFieldMap(TsParameterManager* pM,TsGeometryManager* gM, TsVGeometryComponent* component):
-TsVMagneticField(pM, gM, component), fInvertX(false), fInvertY(false), fInvertZ(false), fNX(0), fNY(0), fNZ(0) {
+HGMEFieldMap::HGMEFieldMap(TsParameterManager* pM,TsGeometryManager* gM, TsVGeometryComponent* component):
+TsVElectroMagneticField(pM, gM, component), fInvertX(false), fInvertY(false), fInvertZ(false), fNX(0), fNY(0), fNZ(0) {
 	ResolveParameters();
 }
 
 // maybe a function for cleaning everything up in a memory clearing situation?
 // what does the ~ mean?
-TsMagneticFieldMap::~TsMagneticFieldMap() {
+HGMEFieldMap::~HGMEFieldMap() {
 	fFieldX.clear();
 	fFieldY.clear();
 	fFieldZ.clear();
@@ -59,7 +59,7 @@ TsMagneticFieldMap::~TsMagneticFieldMap() {
 }
 
 // figure out the parameters of of the magnetic field we want
-void TsMagneticFieldMap::ResolveParameters() {
+void HGMEFieldMap::ResolveParameters() {
 	// open the file for reading in the values
 	std::ifstream file(fPm->GetStringParameter(fComponent->GetFullParmName("MagneticField3DTable")));
 	// if the file could not be opened (file has a value of zero)
@@ -371,7 +371,7 @@ void TsMagneticFieldMap::ResolveParameters() {
 
 
 // now the function that actually gets called by geant4 to get the field
-void TsMagneticFieldMap::GetFieldValue(const G4double Point[3], G4double* Field) const {
+void HGMEFieldMap::GetFieldValue(const G4double Point[3], G4double* Field) const {
 	const G4ThreeVector localPoint = fAffineTransf.Inverse().TransformPoint(G4ThreeVector(Point[0],Point[1],Point[2]));
 	// my guess is that localPoint is the actual location we are being asked about
 
